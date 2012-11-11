@@ -73,40 +73,26 @@
     " General
         if count(g:spf13_bundle_groups, 'general')
             Bundle 'scrooloose/nerdtree'
-            "Bundle 'altercation/vim-colors-solarized'
-            "Bundle 'spf13/vim-colors'
             Bundle 'tpope/vim-surround'
-            "Bundle 'AutoClose'
             Bundle 'kien/ctrlp.vim'
             Bundle 'vim-scripts/sessionman.vim'
             "Bundle 'matchit.zip'
             Bundle 'Lokaltog/vim-powerline'
             Bundle 'Lokaltog/vim-easymotion'
             Bundle 'godlygeek/csapprox'
-            Bundle 'jistr/vim-nerdtree-tabs'
             Bundle 'flazz/vim-colorschemes'
-            "Bundle 'corntrace/bufexplorer'
-			Bundle 'sandeepcr529/Buffet.vim'
-            Bundle 'mbbill/undotree'
             Bundle 'myusuf3/numbers.vim'
             Bundle 'vim-scripts/YankRing.vim.git'
-            Bundle 'rstacruz/sparkup.git'
+			Bundle 'mattn/zencoding-vim'
             Bundle 'vim-scripts/jsbeautify.git'
             Bundle 'aaronbieber/quicktask.git'
-			" This looks cool but need to play with it a bit
-			"Bundle 'chrisbra/histwin.vim'
+			Bundle 'sjl/gundo.vim.git'
         endif
 
     " General Programming
         if count(g:spf13_bundle_groups, 'programming')
             " Pick one of the checksyntax, jslint, or syntastic
             Bundle 'scrooloose/syntastic'
-            "Bundle 'garbas/vim-snipmate'
-            "Bundle 'spf13/snipmate-snippets'
-            " Source support_function.vim to support snipmate-snippets.
-            "if filereadable(expand("~/.vim/bundle/snipmate-snippets/snippets/support_functions.vim"))
-                "source ~/.vim/bundle/snipmate-snippets/snippets/support_functions.vim
-            "endif
             Bundle 'vim-scripts/UltiSnips.git'
 
             Bundle 'tpope/vim-fugitive'
@@ -117,7 +103,6 @@
             endif
             Bundle 'Shougo/neocomplcache'
             Bundle 'joonty/vdebug.git'
-			Bundle 'AndrewRadev/switch.vim'
         endif
 
     " PHP
@@ -207,14 +192,6 @@
 " }
 
 " Vim UI {
-    if filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
-        let g:solarized_termcolors=256
-        color solarized                 " load a colorscheme
-    endif
-        let g:solarized_termtrans=1
-        let g:solarized_contrast="high"
-        let g:solarized_visibility="high"
-
     set tabpagemax=15               " only show 15 tabs
     set showmode                    " display the current mode
 
@@ -243,6 +220,7 @@
     set linespace=0                 " No extra spaces between rows
     set nu                          " Line numbers on
     set showmatch                   " show matching brackets/parenthesis
+	set matchtime=1					" 10th of second 
     set incsearch                   " find as you type search
     set hlsearch                    " highlight search terms
     set winminheight=0              " windows can be 0 line high
@@ -325,12 +303,11 @@
     "location
     let mapleader = ','
 
-	map - :Switch<cr>
-
     map <F11> <ESC>:se nu!<CR>
     imap <F11> <ESC>:se nu!<CR>
     map <F12> <ESC>:se paste!<CR>
-    imap <F12> <ESC>:se paste!<CR>
+    imap <F12> <ESC>:se paste!<CR>a
+	map ,n <ESC>:NumbersToggle<CR>
 
     " Making it so ; works like : for commands. Saves typing and eliminates :W style typos due to lazy holding shift.
     nnoremap ; :
@@ -338,18 +315,10 @@
     " Easier moving in tabs and windows
     map <C-J> <C-W>j<C-W>_
     map <C-K> <C-W>k<C-W>_
-    map <C-L> <C-W>l<C-W>
-    map <C-H> <C-W>h<C-W>
 
     " Wrapped lines goes down/up to next row, rather than next line in file.
     nnoremap j gj
     nnoremap k gk
-
-    " The following two lines conflict with moving to top and bottom of the
-    " screen
-    " If you prefer that functionality, comment them out.
-    map <S-H> gT
-    map <S-L> gt
 
     " Stupid shift key fixes
     command -nargs=* -complete=file W w <args>
@@ -381,7 +350,7 @@
     cmap cwd lcd %:p:h
     cmap cd. lcd %:p:h
 
-    " visual shifting (does not exit Visual mode)
+		" visual shifting (does not exit Visual mode)
     vnoremap < <gv
     vnoremap > >gv
 
@@ -411,6 +380,17 @@
     " Easier horizontal scrolling
     map zl zL
     map zh zH
+	
+	" Buffer navigation
+	map <leader><RIGHT> :bn<cr>	
+	map <leader><LEFT> :bp<cr>	
+
+    if count(g:spf13_bundle_groups, 'php')
+		nnoremap <silent> <buffer> <C-]> :PhpSearchContext<cr>
+	endif
+
+	" map CTRL-L to piece-wise copying of the line above the current one
+	imap <C-L> @@@<ESC>hhkywjl?@@@<CR>P/@@@<CR>3s
 " }
 
 " Plugins {
@@ -448,6 +428,8 @@
         " automatically open and close the popup menu / preview window
         au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
         set completeopt=menu,preview,longest
+		" This stops annoying resize of splits when preview closes
+		set noequalalways 
     " }
 
     " Ctags {
@@ -456,14 +438,8 @@
 
     " AutoCloseTag {
         " Make it so AutoCloseTag works for xml and xhtml files as well
-        au FileType xhtml,xml ru ftplugin/html/autoclosetag.vim
-        nmap <Leader>ac <Plug>ToggleAutoCloseMappings
-    " }
-
-    " SnipMate {
-        " Setting the author var
-        " If forking, please overwrite in your .vimrc.local file
-        let g:snips_author = 'Steve Francia <steve.francia@gmail.com>'
+        "au FileType xhtml,xml ru ftplugin/html/autoclosetag.vim
+        "nmap <Leader>ac <Plug>ToggleAutoCloseMappings
     " }
 
     " NerdTree {
@@ -519,10 +495,6 @@
         nmap <leader>ss :SessionSave<CR>
      " }
 
-     " Buffer explorer {
-        nmap <leader>b :Bufferlist<CR>
-     " }
-
      " JSON {
         ""nmap <leader>jt <Esc>:%!python -m json.tool<CR><Esc>:set filetype=json<CR>
      " }
@@ -556,14 +528,8 @@
         let g:tagbar_singleclick = 1
      "}
 
-     " Sparkup {"
-     " HTML indentation
-        let g:html_indent_inctags = "html,body,head,tbody"
-        let g:html_indent_script1 = "inc"
-        let g:html_indent_style1 = "inc"
-
-        let g:sparkupExecuteMapping = '<c-g>'
-        let g:sparkupNextMapping = '<c-f>'
+     " ZenCoding {"
+		let g:user_zen_leader_key = '<C-B>'
      " }
      
      " PythonMode {
@@ -598,7 +564,7 @@
         let g:neocomplcache_enable_auto_select = 0
 
         " SuperTab like snippets behavior.
-        imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+        "imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : pumvisible() ? "\<C-n>" : "\<TAB>"
 
         " Plugin key-mappings.
         imap <C-k>     <Plug>(neocomplcache_snippets_expand)
@@ -631,6 +597,7 @@
         autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
         autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
         autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+		autocmd FileType php setlocal omnifunc=eclim#php#complete#CodeComplete
 
         " Enable heavy omni completion.
         if !exists('g:neocomplcache_omni_patterns')
@@ -647,20 +614,18 @@
             set conceallevel=2 concealcursor=i
         endif
 
+
+     " }
+	 
+	 " Gundo {
+        nnoremap <c-u> :GundoToggle<CR>
      " }
 
-     " UndoTree {
-        nnoremap <c-u> :UndotreeToggle<CR>
-     " }
-     
+
      " Powerline {
         let g:Powerline_symbols = 'fancy'
      " }
 		
-	 " minibufexpl {
-	 let g:miniBufExplMapCTabSwitchBufs = 1
-	 " }
-	 
 	 " quicktask {
 	 let g:quicktask_autosave = 1
 	 " }
@@ -672,6 +637,14 @@
 	 
 	 " syntastic {
 	 let loaded_xml_syntax_checker = 1
+	 " }
+
+	 " Eclim {
+	 let g:EclimPhpHtmlValidate = 0
+	 let g:EclimBuffersDefaultAction = 'edit'
+	 let g:EclimPhpSearchSingleResult='edit'
+	 let g:EclimHtmlValidate = 0
+	 let g:EclimXmlValidate = 0 
 	 " }
 " }
 
@@ -733,17 +706,6 @@ function! InitializeDirectories()
 endfunction
 call InitializeDirectories()
 
-function! NERDTreeInitAsNeeded()
-    redir => bufoutput
-    buffers!
-    redir END
-    let idx = stridx(bufoutput, "NERD_tree")
-    if idx > -1
-        NERDTreeMirror
-        NERDTreeFind
-        wincmd l
-    endif
-endfunction
 " }
 
 " Convenience function to rebuild ctags
