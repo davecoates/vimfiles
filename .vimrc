@@ -62,7 +62,7 @@
     " In your .vimrc.bundles.local file"
     " list only the plugin groups you will use
     if !exists('g:spf13_bundle_groups')
-        let g:spf13_bundle_groups=['general', 'programming', 'php', 'ruby', 'python', 'javascript', 'html', 'misc']
+        let g:spf13_bundle_groups=['general', 'programming', 'php', 'ruby', 'python', 'javascript', 'html', 'go', 'misc']
     endif
 
     " To override all the included bundles, put
@@ -138,6 +138,12 @@
             let g:rubycomplete_buffer_loading = 1
             "let g:rubycomplete_classes_in_global = 1
             "let g:rubycomplete_rails = 1
+        endif
+
+    " Go
+        if count(g:spf13_bundle_groups, 'go')
+			set rtp+=$GOROOT/misc/vim
+			autocmd BufWritePost *.go :silent Fmt
         endif
 
     " Misc
@@ -558,7 +564,7 @@
 
 		let g:neocomplcache_caching_limit_file_size = 5000000
 
-		let g:neocomplcache_enable_cursor_hold_i = 1	
+		"let g:neocomplcache_enable_cursor_hold_i = 1	
 
         " AutoComplPop like behavior.
         let g:neocomplcache_enable_auto_select = 0
@@ -608,6 +614,7 @@
         let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
         let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
         let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
+		let g:neocomplcache_omni_patterns.go = '\h\w*\.'
 
         " For snippet_complete marker.
         if has('conceal')
