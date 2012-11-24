@@ -81,6 +81,7 @@
             Bundle 'Lokaltog/vim-easymotion'
             Bundle 'godlygeek/csapprox'
             Bundle 'flazz/vim-colorschemes'
+            Bundle 'altercation/vim-colors-solarized'
             Bundle 'myusuf3/numbers.vim'
             Bundle 'vim-scripts/YankRing.vim.git'
 			Bundle 'mattn/zencoding-vim'
@@ -178,7 +179,7 @@
 
     " set autowrite                  " automatically write a file when leaving a modified buffer
     set shortmess+=filmnrxoOtT      " abbrev. of messages (avoids 'hit enter')
-    set viewoptions=folds,options,cursor,unix,slash " better unix / windows compatibility
+    set viewoptions=folds,cursor,unix,slash " better unix / windows compatibility
     set virtualedit=onemore         " allow for cursor beyond last character
     set history=1000                " Store a ton of history (default is 20)
     set spell                       " spell checking on
@@ -194,6 +195,7 @@
         " Could use * rather than *.*, but I prefer to leave .files unsaved
         au BufWinLeave *.* silent! mkview  "make vim save view (state) (folds, cursor, etc)
         au BufWinEnter *.* silent! loadview "make vim load view (state) (folds, cursor, etc)
+		au BufWinEnter *.* silent! foldopen "open current fold
     " }
 " }
 
@@ -250,7 +252,7 @@
     set nowrap                      " wrap long lines
     set autoindent                  " indent at the same level of the previous line
     set shiftwidth=4                " use indents of 4 spaces
-    "set expandtab                   " tabs are spaces, not tabs
+    set noexpandtab                 " tabs are tabs
     set tabstop=4                   " an indentation every four columns
     set softtabstop=4               " let backspace delete indent
     "set matchpairs+=<:>                " match, to be used with %
@@ -564,7 +566,7 @@
 
 		let g:neocomplcache_caching_limit_file_size = 5000000
 
-		"let g:neocomplcache_enable_cursor_hold_i = 1	
+		let g:neocomplcache_enable_cursor_hold_i = 1	
 
         " AutoComplPop like behavior.
         let g:neocomplcache_enable_auto_select = 0
@@ -639,6 +641,7 @@
 
 	 " vdebug {
 	 let g:vdebug_options = {
+		\ 'continuous_mode' : 0,
 	 	\ 'break_on_open': 0 }
 	 " }
 	 
@@ -671,14 +674,18 @@
             set transparency=5          " Make the window slightly transparent
         endif
     else
-        if &term == 'xterm' || &term == 'screen'
+        if &term == 'xterm' || &term == 'screen' || &term == 'screen-256color'
             set t_Co=256                 " Enable 256 colors to stop the CSApprox warning and make xterm vim shine
         endif
         "set term=builtin_ansi       " Make arrow and other keys work
     endif
 " }
 
-colorscheme zoria256
+"colorscheme zoria256
+"let g:solarized_termcolors=256
+colorscheme solarized
+let g:Powerline_colorscheme = 'solarized256'
+"let g:Powerline_theme = 'solarized256'
 
  " Functions {
 
