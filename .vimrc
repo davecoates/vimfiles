@@ -72,11 +72,14 @@
 
     " General
         if count(g:spf13_bundle_groups, 'general')
+			Bundle 'ciaranm/detectindent'
             Bundle 'scrooloose/nerdtree'
             Bundle 'tpope/vim-surround'
+			Bundle 'tpope/vim-repeat'
+			Bundle 'tpope/vim-abolish'
+			Bundle 'tpope/vim-unimpaired'
             Bundle 'kien/ctrlp.vim'
             Bundle 'vim-scripts/sessionman.vim'
-            "Bundle 'matchit.zip'
             Bundle 'Lokaltog/vim-powerline'
             Bundle 'Lokaltog/vim-easymotion'
             Bundle 'godlygeek/csapprox'
@@ -97,12 +100,12 @@
             Bundle 'vim-scripts/UltiSnips.git'
 
             Bundle 'tpope/vim-fugitive'
+			Bundle 'airblade/vim-gitgutter'
             Bundle 'scrooloose/nerdcommenter'
             Bundle 'godlygeek/tabular'
-            if executable('ctags')
+			"if executable('ctags')
                 Bundle 'majutsushi/tagbar'
-            endif
-            Bundle 'Shougo/neocomplcache'
+            "endif
             Bundle 'joonty/vdebug.git'
         endif
 
@@ -185,6 +188,8 @@
     set spell                       " spell checking on
     set hidden                      " allow buffer switching without saving
 
+	au VimEnter * highlight clear SignColumn
+	
     " Setting up the directories {
         set backup                      " backups are nice ...
         if has('persistent_undo')
@@ -239,9 +244,9 @@
     set whichwrap=b,s,h,l,<,>,[,]   " backspace and cursor keys wrap to
     set scrolljump=5                " lines to scroll when cursor leaves screen
     set scrolloff=3                 " minimum lines to keep above and below cursor
-    set foldenable                  " auto fold code
-    "set list
-    "set listchars=tab:,.,trail:.,extends:#,nbsp:. " Highlight problematic whitespace
+    set foldenable                  " auto fold code 
+    set list
+	set listchars=tab:▸.,trail:¬,extends:#,nbsp:. " Highlight problematic whitespace
     set noerrorbells                " don't beep!
     set visualbell                  " don't beep!
     set t_vb=                       " don't beep! 
@@ -296,7 +301,10 @@
     autocmd FileType php set textwidth=79
     autocmd FileType php set formatoptions+=tcqlro
     autocmd FileType php set iskeyword=@,48-57,_,192-255
+	autocmd FileType php noremap <C-L> :w!<CR>:!php %<CR>
 
+	autocmd FileType python let g:neocomplcache_disable_auto_complete = 0
+	
     autocmd FileType qf wincmd J "open quickfix on bottom
     " Maximize the window after entering it, be sure to keep the quickfix window
     " at the specified height.
@@ -315,7 +323,7 @@
     imap <F11> <ESC>:se nu!<CR>
     map <F12> <ESC>:se paste!<CR>
     imap <F12> <ESC>:se paste!<CR>a
-	map ,n <ESC>:NumbersToggle<CR>
+	map <leader>nn <ESC>:NumbersToggle<CR>
 
     " Making it so ; works like : for commands. Saves typing and eliminates :W style typos due to lazy holding shift.
     nnoremap ; :
@@ -369,6 +377,10 @@
     map [H g0
     imap [H g0
 
+	map OH	g0
+	map OF	$
+
+
     " For when you forget to sudo.. Really Write the file.
     cmap w!! w !sudo tee % >/dev/null
 
@@ -394,7 +406,7 @@
 	map <leader><LEFT> :bp<cr>	
 
     if count(g:spf13_bundle_groups, 'php')
-		nnoremap <silent> <buffer> <C-]> :PhpSearchContext<cr>
+		"nnoremap <silent> <buffer> <C-]> :PhpSearchContext<cr>
 	endif
 
 	" map CTRL-L to piece-wise copying of the line above the current one
@@ -427,6 +439,8 @@
 
         " some convenient mappings
         inoremap <expr> <Esc>      pumvisible() ? "\<C-e>\<Esc>" : "\<Esc>"
+		" smartinput maps <CR> so don't use this. Also see neocomplcache
+		" override below
         inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
         inoremap <expr> <Down>     pumvisible() ? "\<C-n>" : "\<Down>"
         inoremap <expr> <Up>       pumvisible() ? "\<C-p>" : "\<Up>"
@@ -512,7 +526,8 @@
      " }
 
      " ctrlp {
-        let g:ctrlp_working_path_mode = 0
+		let g:ctrlp_root_markers = ['.project','.project_root', '.git']
+        let g:ctrlp_working_path_mode = 'rc'
         nnoremap <silent> <D-t> :CtrlP<CR>
         nnoremap <silent> <D-r> :CtrlPMRU<CR>
         let g:ctrlp_custom_ignore = {
@@ -560,44 +575,48 @@
         let g:neocomplcache_enable_at_startup = 1
         let g:neocomplcache_enable_camel_case_completion = 1
         let g:neocomplcache_enable_smart_case = 1
-        let g:neocomplcache_enable_underbar_completion = 1
+        let g:neocomplcache_enable_underbar_completion = 0
         let g:neocomplcache_min_syntax_length = 3
         let g:neocomplcache_enable_auto_delimiter = 1
 
 		let g:neocomplcache_caching_limit_file_size = 5000000
 
-		let g:neocomplcache_enable_cursor_hold_i = 1	
+		"let g:neocomplcache_enable_cursor_hold_i = 1	
 
         " AutoComplPop like behavior.
         let g:neocomplcache_enable_auto_select = 0
+		" don't auto complete as type, must manually invoke
+		let g:neocomplcache_disable_auto_complete = 1
 
         " SuperTab like snippets behavior.
         "imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : pumvisible() ? "\<C-n>" : "\<TAB>"
 
         " Plugin key-mappings.
-        imap <C-k>     <Plug>(neocomplcache_snippets_expand)
-        smap <C-k>     <Plug>(neocomplcache_snippets_expand)
-        inoremap <expr><C-g>     neocomplcache#undo_completion()
-        inoremap <expr><C-l>     neocomplcache#complete_common_string()
+"        imap <C-k>     <Plug>(neocomplcache_snippets_expand)
+"        smap <C-k>     <Plug>(neocomplcache_snippets_expand)
+"        inoremap <expr><C-g>     neocomplcache#undo_completion()
+"        inoremap <expr><C-l>     neocomplcache#complete_common_string()
 
 
         " <CR>: close popup
         " <s-CR>: close popup and save indent.
-        inoremap <expr><CR>  pumvisible() ? neocomplcache#close_popup() : "\<CR>"
-        inoremap <expr><s-CR> pumvisible() ? neocomplcache#close_popup() "\<CR>" : "\<CR>"
-        " <TAB>: completion.
-        inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+        "inoremap <expr><CR>  pumvisible() ? neocomplcache#close_popup() : smartinput#trigger_or_fallback('<CR>', '<CR>')
+	   " inoremap <expr><CR>  pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+        "inoremap <expr><s-CR> pumvisible() ? neocomplcache#close_popup() "\<CR>" : "\<CR>"
+        "" <TAB>: completion.
+       " inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
         " <C-h>, <BS>: close popup and delete backword char.
-        inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-        inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-        inoremap <expr><C-y>  neocomplcache#close_popup()
-        inoremap <expr><C-e>  neocomplcache#cancel_popup()
+     "   inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+        ""inoremap <expr><BS> pumvisible() ? neocomplcache#smart_close_popup()."\<C-h>" : smartinput#trigger_or_fallback('<BS>', '<BS>')
+		"inoremap <expr><BS> pumvisible() ? neocomplcache#smart_close_popup()."\<C-h>" : '<BS>'
+        "inoremap <expr><C-y>  neocomplcache#close_popup()
+        "inoremap <expr><C-e>  neocomplcache#cancel_popup()
 		
-		inoremap <expr><Left>  neocomplcache#close_popup() . "\<Left>"
-		inoremap <expr><Right> neocomplcache#close_popup() . "\<Right>"
-		inoremap <expr><Up>    neocomplcache#close_popup() . "\<Up>"
-		inoremap <expr><Down>  neocomplcache#close_popup() . "\<Down>"
+		"inoremap <expr><Left>  neocomplcache#close_popup() . "\<Left>"
+		"inoremap <expr><Right> neocomplcache#close_popup() . "\<Right>"
+		"inoremap <expr><Up>    neocomplcache#close_popup() . "\<Up>"
+		"inoremap <expr><Down>  neocomplcache#close_popup() . "\<Down>"
 
         " Enable omni completion.
         autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -606,6 +625,7 @@
         autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
         autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 		autocmd FileType php setlocal omnifunc=eclim#php#complete#CodeComplete
+		"autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
 
         " Enable heavy omni completion.
         if !exists('g:neocomplcache_omni_patterns')
@@ -683,8 +703,11 @@
 
 "colorscheme zoria256
 "let g:solarized_termcolors=256
+
+let g:solarized_visibility = 'low'
 colorscheme solarized
 let g:Powerline_colorscheme = 'solarized256'
+
 "let g:Powerline_theme = 'solarized256'
 
  " Functions {
@@ -727,6 +750,24 @@ call InitializeDirectories()
 func! RebuildTags()
 	:!ctags -f tags .
 endfunc
+
+func! TabSpaceSettings()
+	call inputsave()
+	let option = input("Select settings:\n\n1. Hard 4 space tabs (Bazooka)\n2. 2 Space soft tabs (Drupal)\n\n")
+	call inputrestore()
+	if option == '1'
+		set noexpandtab
+		set tabstop=4
+		set shiftwidth=4
+	endif
+	if option == '2'
+		set expandtab
+		set tabstop=2
+		set shiftwidth=2
+	endif
+endfunc
+
+nmap <leader><tab> :call TabSpaceSettings()<CR>
 
 " { Diff current unsaved file
 function! s:DiffWithSaved()
