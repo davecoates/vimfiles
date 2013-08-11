@@ -372,13 +372,16 @@
 
     " Fix home and end keybindings for screen, particularly on mac
     " - for some reason this fixes the arrow keys too. huh.
-    map [F $
-    imap [F $
-    map [H g0
-    imap [H g0
+	map [F $
+	imap [F $
+	map [H g0
+	imap [H g0
 
+	" Fix home / end bindings for Terminal on ubuntu
 	map OH	g0
 	map OF	$
+	imap OH	<C-O>g0
+	imap OF	<C-O>$
 
 
     " For when you forget to sudo.. Really Write the file.
@@ -703,7 +706,7 @@
 
 "colorscheme zoria256
 "let g:solarized_termcolors=256
-
+let g:solarized_termtrans=1
 let g:solarized_visibility = 'low'
 colorscheme solarized
 let g:Powerline_colorscheme = 'solarized256'
