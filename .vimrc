@@ -189,7 +189,7 @@
 
     " set autowrite                  " automatically write a file when leaving a modified buffer
     set shortmess+=filmnrxoOtT      " abbrev. of messages (avoids 'hit enter')
-    set viewoptions=folds,cursor,unix,slash " better unix / windows compatibility
+    set viewoptions=options,folds,cursor,unix,slash " better unix / windows compatibility
     set virtualedit=onemore         " allow for cursor beyond last character
     set history=1000                " Store a ton of history (default is 20)
     set spell                       " spell checking on
@@ -770,17 +770,25 @@ endfunc
 
 func! TabSpaceSettings()
 	call inputsave()
-	let option = input("Select settings:\n\n1. Hard 4 space tabs (Bazooka)\n2. 2 Space soft tabs (Drupal)\n\n")
+	let option = input("Select settings:\n\n1. Hard 4 space tabs (Bazooka)\n2. 2 Space soft tabs (Drupal)\n3. 4 space soft tabs\n\n")
 	call inputrestore()
 	if option == '1'
 		set noexpandtab
 		set tabstop=4
 		set shiftwidth=4
+		set softtabstop=4
 	endif
 	if option == '2'
 		set expandtab
 		set tabstop=2
 		set shiftwidth=2
+		set softtabstop=2
+	endif
+	if option == '3'
+		set expandtab
+		set tabstop=4
+		set shiftwidth=4
+		set softtabstop=2
 	endif
 endfunc
 
