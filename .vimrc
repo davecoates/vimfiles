@@ -21,7 +21,7 @@
         set background=dark     " Assume a dark background
 		if v:version >= 703
 			" Mark ideal text width (set by textwidth)
-			"set colorcolumn=+1
+			set colorcolumn=+1
 		endif
     " }
 
@@ -117,10 +117,10 @@
     " Python
         if count(g:spf13_bundle_groups, 'python')
             " Pick either python-mode or pyflakes & pydoc
-            Bundle 'klen/python-mode'
-            Bundle 'python.vim'
-            Bundle 'python_match.vim'
-            Bundle 'pythoncomplete'
+            "Bundle 'klen/python-mode'
+            "Bundle 'python.vim'
+            "Bundle 'python_match.vim'
+            "Bundle 'pythoncomplete'
         endif
 
     " Javascript
@@ -148,6 +148,13 @@
         if count(g:spf13_bundle_groups, 'go')
 			set rtp+=$GOROOT/misc/vim
 			autocmd BufWritePost *.go :silent Fmt
+        endif
+
+    " Clojure
+        if count(g:spf13_bundle_groups, 'clojure')
+            Bundle 'guns/vim-clojure-static'
+			Bundle 'tpope/vim-fireplace'
+			Bundle 'tpope/vim-classpath'
         endif
 
     " Misc
@@ -302,6 +309,13 @@
     autocmd FileType php set formatoptions+=tcqlro
     autocmd FileType php set iskeyword=@,48-57,_,192-255
 	autocmd FileType php noremap <C-L> :w!<CR>:!php %<CR>
+
+    " Clojure
+    autocmd FileType clj set sw=2
+    autocmd FileType clj set ts=2
+    autocmd FileType clj set sts=2
+    autocmd FileType clj set textwidth=79
+    autocmd FileType clj set formatoptions+=tcqlro
 
 	autocmd FileType python let g:neocomplcache_disable_auto_complete = 0
 	
