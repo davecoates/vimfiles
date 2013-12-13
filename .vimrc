@@ -23,6 +23,7 @@
 			" Mark ideal text width (set by textwidth)
 			set colorcolumn=+1
 		endif
+		set clipboard=unnamed
     " }
 
     " Windows Compatible {
@@ -80,14 +81,14 @@
 			Bundle 'tpope/vim-unimpaired'
             Bundle 'kien/ctrlp.vim'
             Bundle 'vim-scripts/sessionman.vim'
-            Bundle 'Lokaltog/vim-powerline'
+            "Bundle 'Lokaltog/vim-powerline'
             Bundle 'Lokaltog/vim-easymotion'
             Bundle 'godlygeek/csapprox'
             Bundle 'flazz/vim-colorschemes'
             Bundle 'altercation/vim-colors-solarized'
             Bundle 'myusuf3/numbers.vim'
             Bundle 'vim-scripts/YankRing.vim.git'
-			Bundle 'mattn/zencoding-vim'
+			Bundle 'mattn/emmet-vim'
             Bundle 'vim-scripts/jsbeautify.git'
             Bundle 'aaronbieber/quicktask.git'
 			Bundle 'sjl/gundo.vim.git'
@@ -111,16 +112,21 @@
 
     " PHP
         if count(g:spf13_bundle_groups, 'php')
-            Bundle 'spf13/PIV'
+			Bundle 'vim-scripts/phpfolding.vim'
+			Bundle 'StanAngeloff/php.vim'
+			Bundle 'shawncplus/phpcomplete.vim'
+            "Bundle 'spf13/PIV'
         endif
 
     " Python
         if count(g:spf13_bundle_groups, 'python')
             " Pick either python-mode or pyflakes & pydoc
-            "Bundle 'klen/python-mode'
+            Bundle 'klen/python-mode'
             "Bundle 'python.vim'
             "Bundle 'python_match.vim'
             "Bundle 'pythoncomplete'
+			"Bundle 'davidhalter/jedi-vim'
+			"Bundle 'fs111/pydoc.vim'
         endif
 
     " Javascript
@@ -128,12 +134,15 @@
             Bundle 'leshill/vim-json'
             Bundle 'groenewege/vim-less'
             Bundle "pangloss/vim-javascript"
+			Bundle 'kchmck/vim-coffee-script'
         endif
 
     " HTML
         if count(g:spf13_bundle_groups, 'html')
             "Bundle 'amirh/HTML-AutoCloseTag'
-            Bundle 'ChrisYip/Better-CSS-Syntax-for-Vim'
+            "Bundle 'ChrisYip/Better-CSS-Syntax-for-Vim'
+						Bundle 'hail2u/vim-css3-syntax'
+						Bundle 'othree/html5.vim'
         endif
 
     " Ruby
@@ -283,6 +292,7 @@
     autocmd FileType html set sw=2
     autocmd FileType html set ts=2
     autocmd FileType html set sts=2
+		autocmd FileType html set expandtab
     autocmd FileType html set textwidth=0
     " XHTML (tab width 2 chr, no wrapping)
     autocmd FileType xhtml set sw=2
@@ -296,10 +306,10 @@
     autocmd FileType css set textwidth=79
     autocmd FileType css set iskeyword+=-
     " Javascript
-    autocmd FileType javascript set sw=4
-    autocmd FileType javascript set ts=4
-    autocmd FileType javascript set sts=4
-    "autocmd FileType javascript set textwidth=79
+    autocmd FileType javascript set sw=2
+    autocmd FileType javascript set ts=2
+    autocmd FileType javascript set sts=2
+    autocmd FileType javascript set textwidth=79
     autocmd FileType javascript set iskeyword+=$
     " PHP
     autocmd FileType php set sw=4
@@ -308,7 +318,7 @@
     autocmd FileType php set textwidth=79
     autocmd FileType php set formatoptions+=tcqlro
     autocmd FileType php set iskeyword=@,48-57,_,192-255
-	autocmd FileType php noremap <C-L> :w!<CR>:!php %<CR>
+    autocmd FileType php noremap <C-L> :w!<CR>:!php %<CR>
 
     " Clojure
     autocmd FileType clj set sw=2
@@ -317,8 +327,13 @@
     autocmd FileType clj set textwidth=79
     autocmd FileType clj set formatoptions+=tcqlro
 
-	autocmd FileType python let g:neocomplcache_disable_auto_complete = 0
-	
+    autocmd FileType python let g:neocomplcache_disable_auto_complete = 0
+    autocmd FileType python set sw=4
+    autocmd FileType python set ts=4
+    autocmd FileType python set sts=4
+    autocmd FileType python set textwidth=79
+    autocmd FileType python noremap <C-L> :w!<CR>:!python %<CR>
+
     autocmd FileType qf wincmd J "open quickfix on bottom
     " Maximize the window after entering it, be sure to keep the quickfix window
     " at the specified height.
@@ -333,11 +348,11 @@
     "location
     let mapleader = ','
 
-    map <F11> <ESC>:se nu!<CR>
-    imap <F11> <ESC>:se nu!<CR>
+    map <F11> <ESC>:se relativenumber!<CR>:se nu!<CR>
+    imap <F11> <ESC>:se relativenumber!<CR>:se nu!<CR>
     map <F12> <ESC>:se paste!<CR>
     imap <F12> <ESC>:se paste!<CR>a
-	map <leader>nn <ESC>:NumbersToggle<CR>
+    map <leader>nn <ESC>:NumbersToggle<CR>
 
     " Making it so ; works like : for commands. Saves typing and eliminates :W style typos due to lazy holding shift.
     nnoremap ; :
@@ -375,6 +390,10 @@
     "clearing highlighted search
     nmap <silent> <leader>/ :nohlsearch<CR>
 
+	" disable help
+	map <F1> <Esc>
+	imap <F1> <Esc>
+
     " Shortcuts
     " Change Working Directory to that of the current file
     cmap cwd lcd %:p:h
@@ -386,16 +405,16 @@
 
     " Fix home and end keybindings for screen, particularly on mac
     " - for some reason this fixes the arrow keys too. huh.
-	map [F $
-	imap [F $
-	map [H g0
-	imap [H g0
+    map [F $
+    imap [F $
+    map [H g0
+    imap [H g0
 
-	" Fix home / end bindings for Terminal on ubuntu
-	map OH	g0
-	map OF	$
-	imap OH	<C-O>g0
-	imap OF	<C-O>$
+    " Fix home / end bindings for Terminal on ubuntu
+    map OH	g0
+    map OF	$
+    imap OH	<C-O>g0
+    imap OF	<C-O>$
 
 
     " For when you forget to sudo.. Really Write the file.
@@ -411,23 +430,23 @@
 
     " Adjust viewports to the same size
     map <Leader>= <C-w>=
-	" Maximum current viewport
-	map <leader>+ <C-w>_
+    " Maximum current viewport
+    map <leader>+ <C-w>_
 
     " Easier horizontal scrolling
     map zl zL
     map zh zH
 	
-	" Buffer navigation
-	map <leader><RIGHT> :bn<cr>	
-	map <leader><LEFT> :bp<cr>	
+    " Buffer navigation
+    map <leader><RIGHT> :bn<cr>	
+    map <leader><LEFT> :bp<cr>	
 
     if count(g:spf13_bundle_groups, 'php')
-		"nnoremap <silent> <buffer> <C-]> :PhpSearchContext<cr>
-	endif
+      "nnoremap <silent> <buffer> <C-]> :PhpSearchContext<cr>
+    endif
 
-	" map CTRL-L to piece-wise copying of the line above the current one
-	imap <C-L> @@@<ESC>hhkywjl?@@@<CR>P/@@@<CR>3s
+    " map CTRL-L to piece-wise copying of the line above the current one
+    imap <C-L> @@@<ESC>hhkywjl?@@@<CR>P/@@@<CR>3s
 " }
 
 " Plugins {
@@ -569,7 +588,7 @@
      "}
 
      " ZenCoding {"
-		let g:user_zen_leader_key = '<C-B>'
+		let g:user_emmet_leader_key = '<c-b>'
      " }
      
      " PythonMode {
@@ -641,8 +660,9 @@
         autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
         autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
         autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-		autocmd FileType php setlocal omnifunc=eclim#php#complete#CodeComplete
-		"autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
+		"autocmd FileType php setlocal omnifunc=eclim#php#complete#CodeComplete
+		autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
+		autocmd FileType php set keywordprg=pman
 
         " Enable heavy omni completion.
         if !exists('g:neocomplcache_omni_patterns')
@@ -662,6 +682,7 @@
 
 
      " }
+	 "
 	 
 	 " Gundo {
         nnoremap <c-u> :GundoToggle<CR>
@@ -678,12 +699,17 @@
 
 	 " vdebug {
 	 let g:vdebug_options = {
+		\ 'server' : '192.168.56.1',
 		\ 'continuous_mode' : 0,
 	 	\ 'break_on_open': 0 }
 	 " }
 	 
 	 " syntastic {
 	 let loaded_xml_syntax_checker = 1
+	 let g:syntastic_error_symbol='✗'
+	 let g:syntastic_warning_symbol='⚠'
+	 let g:syntastic_javascript_checkers = ['jslint']
+	 let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute \"ng-"]
 	 " }
 
 	 " Eclim {
@@ -700,8 +726,8 @@
     if has('gui_running')
         set guioptions-=T           " remove the toolbar
         set lines=40                " 40 lines of text instead of 24,
-        if !has("gui_macvim") 
-            set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 12
+        if has("gui_macvim") 
+            set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h15
         elseif has("gui_gtk2")
             set guifont=Andale\ Mono\ Regular\ 16,Menlo\ Regular\ 15,Consolas\ Regular\ 16,Courier\ New\ Regular\ 18
         else
@@ -717,6 +743,21 @@
         "set term=builtin_ansi       " Make arrow and other keys work
     endif
 " }
+
+"if &term =~ "xterm.*" || &term =~ "screen256.*"
+" Toggle pasting when using system clipboard
+    let &t_ti = &t_ti . "\e[?2004h"
+    let &t_te = "\e[?2004l" . &t_te
+    function XTermPasteBegin(ret)
+        set pastetoggle=<Esc>[201~
+        set paste
+        return a:ret
+    endfunction
+    map <expr> <Esc>[200~ XTermPasteBegin("i")
+    imap <expr> <Esc>[200~ XTermPasteBegin("")
+    cmap <Esc>[200~ <nop>
+    cmap <Esc>[201~ <nop>
+"endif
 
 "colorscheme zoria256
 "let g:solarized_termcolors=256
@@ -788,7 +829,7 @@ func! TabSpaceSettings()
 		set expandtab
 		set tabstop=4
 		set shiftwidth=4
-		set softtabstop=2
+		set softtabstop=4
 	endif
 endfunc
 
